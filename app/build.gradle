@@ -7,9 +7,9 @@ apply from: rootProject.file("gradle/hilt.gradle")
 
 android {
     defaultConfig {
-        applicationId "com.tfandkusu.template"
+        applicationId "com.tfandkusu.androidview"
         versionCode 1
-        versionName "2022.01.01"
+        versionName "2022.02.01"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
