@@ -15,9 +15,7 @@ It displays a list of [tfandkusu](https://github.com/tfandkusu)'s public GitHub 
 
 # Install
 
-Current main branch.
-
-[<img src="https://dply.me/tfafbv/button/large" alt="Try it on your device via DeployGate">](https://dply.me/tfafbv#install)
+TODO
 
 # Architecture
 
