@@ -1,6 +1,8 @@
 [![codecov](https://codecov.io/gh/tfandkusu/android_app_template/branch/main/graph/badge.svg?token=DQI5AN5H0Q)](https://codecov.io/gh/tfandkusu/android_app_template)
 
-# Android app template
+# try_android_view_in_compose
+
+Try AndroidView in Jetpack Compose.
 
 # Functionality
 
