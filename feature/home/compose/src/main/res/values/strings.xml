@@ -2,4 +2,7 @@
 <resources>
     <string name="fork">Fork</string>
     <string name="action_information">Information</string>
+    <string name="label_ad">Ad</string>
+    <string name="bottom_ad_title">Space Museum</string>
+    <string name="bottom_ad_message">Let\'s learn about satellites.</string>
 </resources>

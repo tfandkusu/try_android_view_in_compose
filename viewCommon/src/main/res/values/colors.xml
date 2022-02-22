@@ -16,4 +16,5 @@
 
     <color name="top_app_bar">@color/purple_500</color>
     <color name="status_bar">@color/purple_700</color>
+    <color name="label_ad">#ffb300</color>
 </resources>

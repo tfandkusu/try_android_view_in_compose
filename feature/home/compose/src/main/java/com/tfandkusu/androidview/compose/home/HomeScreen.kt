@@ -3,7 +3,9 @@ package com.tfandkusu.androidview.compose.home
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -67,27 +69,30 @@ fun HomeScreen(viewModel: HomeViewModel) {
             )
         }
     ) {
-        if (errorState.noError()) {
-            if (state.progress) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                LazyColumn {
-                    state.repos.map {
-                        item(key = it.id) {
-                            GitHubRepoListItem(it)
+        Column(modifier = Modifier.fillMaxHeight()) {
+            if (errorState.noError()) {
+                if (state.progress) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    LazyColumn(modifier = Modifier.weight(1f)) {
+                        state.repos.map {
+                            item(key = it.id) {
+                                GitHubRepoListItem(it)
+                            }
                         }
                     }
                 }
+            } else {
+                ApiError(errorState) {
+                    viewModel.event(HomeEvent.Load)
+                }
             }
-        } else {
-            ApiError(errorState) {
-                viewModel.event(HomeEvent.Load)
-            }
+            BottomAdAndroidView()
         }
     }
 }
