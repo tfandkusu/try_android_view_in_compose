@@ -19,26 +19,31 @@ enum class AdType(val type: Int) {
 
 @Composable
 fun InfeedAdAndroidView(adType: AdType) {
+    val recycler = LocalInfeedAdAndroidViewRecycler.current
     Column {
         AndroidViewBinding(
             modifier = Modifier.fillMaxWidth().height(100.dp),
             factory = { inflater, parent, _ ->
-                Timber.d("factory")
-                val binding = ViewInfeedAdBinding.inflate(inflater, parent, false)
-                binding.root.addOnAttachStateChangeListener(
-                    object : View.OnAttachStateChangeListener {
-                        override fun onViewAttachedToWindow(v: View?) {
-                            Timber.d("onViewAttachedToWindow")
-                        }
+                recycler.recycle()?.let { view ->
+                    Timber.d("factory bind")
+                    ViewInfeedAdBinding.bind(view)
+                } ?: run {
+                    Timber.d("factory inflate")
+                    val binding = ViewInfeedAdBinding.inflate(inflater, parent, false)
+                    binding.root.addOnAttachStateChangeListener(
+                        object : View.OnAttachStateChangeListener {
+                            override fun onViewAttachedToWindow(v: View) {
+                            }
 
-                        override fun onViewDetachedFromWindow(v: View?) {
-                            Timber.d("onViewDetachedFromWindow")
-                        }
-                    })
-                binding
+                            override fun onViewDetachedFromWindow(view: View) {
+                                recycler.save(view)
+                            }
+                        })
+                    binding
+                }
             },
             update = {
-                Timber.d("update")
+                Timber.d("update $adType")
                 when (adType) {
                     AdType.TYPE_1 -> {
                         this.image.setImageResource(R.drawable.animal_wallaby_kangaroo)
