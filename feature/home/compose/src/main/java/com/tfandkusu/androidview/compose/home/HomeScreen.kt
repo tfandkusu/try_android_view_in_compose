@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
@@ -51,12 +50,6 @@ fun HomeScreen(viewModel: HomeViewModel) {
     LaunchedEffect(Unit) {
         viewModel.event(HomeEvent.OnCreate)
         viewModel.event(HomeEvent.Load)
-    }
-    val recycler = LocalInfeedAdAndroidViewRecycler.current
-    DisposableEffect(Unit) {
-        onDispose {
-            recycler.clear()
-        }
     }
     val context = LocalContext.current
     val state = useState(viewModel)
