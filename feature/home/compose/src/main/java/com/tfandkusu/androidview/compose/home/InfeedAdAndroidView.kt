@@ -18,8 +18,7 @@ enum class AdType(val type: Int) {
 }
 
 @Composable
-fun InfeedAdAndroidView(adType: AdType) {
-    val recycler = LocalInfeedAdAndroidViewRecycler.current
+fun InfeedAdAndroidView(adType: AdType, recycler: InfeedAdAndroidViewRecycler) {
     Column {
         AndroidViewBinding(
             modifier = Modifier.fillMaxWidth().height(100.dp),

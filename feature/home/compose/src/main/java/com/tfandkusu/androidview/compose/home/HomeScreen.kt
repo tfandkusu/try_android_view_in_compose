@@ -15,8 +15,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,15 +42,19 @@ import com.tfandkusu.androidview.viewmodel.useState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-val LocalInfeedAdAndroidViewRecycler = compositionLocalOf {
-    InfeedAdAndroidViewRecycler()
-}
-
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
+    val recycler = remember {
+        InfeedAdAndroidViewRecycler()
+    }
     LaunchedEffect(Unit) {
         viewModel.event(HomeEvent.OnCreate)
         viewModel.event(HomeEvent.Load)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            recycler.clear()
+        }
     }
     val context = LocalContext.current
     val state = useState(viewModel)
@@ -95,7 +100,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
                                 else
                                     AdType.TYPE_2
                                 item(key = adType.type) {
-                                    InfeedAdAndroidView(adType)
+                                    InfeedAdAndroidView(adType, recycler)
                                 }
                             }
                         }
