@@ -2,6 +2,7 @@ package com.tfandkusu.androidview.compose.home
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,7 +16,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,10 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
-import com.tfandkusu.androidview.compose.TemplateTopAppBar
+import com.tfandkusu.androidview.compose.NyTopAppBar
 import com.tfandkusu.androidview.compose.home.listitem.GitHubRepoListItem
 import com.tfandkusu.androidview.home.compose.R
-import com.tfandkusu.androidview.ui.theme.AppTemplateTheme
+import com.tfandkusu.androidview.ui.theme.MyTheme
 import com.tfandkusu.androidview.view.error.ApiError
 import com.tfandkusu.androidview.view.info.InfoActivityAlias
 import com.tfandkusu.androidview.viewmodel.error.ApiErrorViewModelHelper
@@ -39,19 +42,34 @@ import com.tfandkusu.androidview.viewmodel.home.HomeViewModel
 import com.tfandkusu.androidview.viewmodel.useState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+class HomeScreenItemId(
+    val repoId: Long,
+    val adIndex: Int
+) : Parcelable
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
+    val recycler = remember {
+        InfeedAdAndroidViewRecycler()
+    }
     LaunchedEffect(Unit) {
         viewModel.event(HomeEvent.OnCreate)
         viewModel.event(HomeEvent.Load)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            recycler.clear()
+        }
     }
     val context = LocalContext.current
     val state = useState(viewModel)
     val errorState = useErrorState(viewModel.error)
     Scaffold(
         topBar = {
-            TemplateTopAppBar(
+            NyTopAppBar(
                 title = {
                     Text(stringResource(R.string.app_name))
                 },
@@ -80,9 +98,22 @@ fun HomeScreen(viewModel: HomeViewModel) {
                     }
                 } else {
                     LazyColumn(modifier = Modifier.weight(1f)) {
-                        state.repos.map {
-                            item(key = it.id) {
-                                GitHubRepoListItem(it)
+                        var adIndex = 0
+                        state.repos.mapIndexed { index, repo ->
+                            item(key = HomeScreenItemId(repo.id, 0)) {
+                                GitHubRepoListItem(repo) {
+                                    navigateToDetail()
+                                }
+                            }
+                            if ((index - 2) % 7 == 0) {
+                                val adType = if ((index - 2) % 14 == 0)
+                                    AdType.TYPE_1
+                                else
+                                    AdType.TYPE_2
+                                item(key = HomeScreenItemId(0, adIndex)) {
+                                    InfeedAdAndroidView(adType, recycler)
+                                }
+                                adIndex += 1
                             }
                         }
                     }
@@ -116,7 +147,7 @@ class HomeViewModelPreview(private val previewState: HomeState) : HomeViewModel 
 @Composable
 @Preview
 fun HomeScreenPreviewProgress() {
-    AppTemplateTheme {
+    MyTheme {
         HomeScreen(HomeViewModelPreview(HomeState()))
     }
 }
@@ -129,7 +160,7 @@ fun HomeScreenPreviewList() {
         progress = false,
         repos = repos
     )
-    AppTemplateTheme {
+    MyTheme {
         HomeScreen(HomeViewModelPreview(state))
     }
 }
@@ -137,7 +168,7 @@ fun HomeScreenPreviewList() {
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun HomeScreenPreviewDarkProgress() {
-    AppTemplateTheme {
+    MyTheme {
         HomeScreen(HomeViewModelPreview(HomeState()))
     }
 }
@@ -150,7 +181,7 @@ fun HomeScreenPreviewDarkList() {
         progress = false,
         repos = repos
     )
-    AppTemplateTheme {
+    MyTheme {
         HomeScreen(HomeViewModelPreview(state))
     }
 }

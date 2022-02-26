@@ -25,7 +25,7 @@ fun BottomAdAndroidView() {
         horizontalArrangement = Arrangement.Center
     ) {
         AndroidViewBinding(
-            modifier = Modifier.width(320.dp).height(50.dp).fillMaxWidth(),
+            modifier = Modifier.width(320.dp).height(50.dp),
             factory = { inflater, parent, _ ->
                 Timber.d("factory")
                 ViewBottomAdBinding.inflate(inflater, parent, false)
