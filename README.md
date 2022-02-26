@@ -2,16 +2,15 @@
 
 # try_android_view_in_compose
 
-Try AndroidView in Jetpack Compose.
+Tried [AndroidViewBinding](https://developer.android.com/jetpack/compose/interop/interop-apis#views-in-compose) to use ads such as [AdMob](https://admob.google.com/home/) in Jetpack Compose 
 
 # Functionality
 
-This repository is a template for Android app.
-So it does not have any practical features.
+It displays a list of [tfandkusu](https://github.com/tfandkusu)'s public GitHub repositories with a banner ad and infeed ads together.
 
-It displays a list of [tfandkusu](https://github.com/tfandkusu)'s public GitHub repositories.
+Ads (with Ad label) is made by layout XML and others is made by Jetpack Compose.
 
-<img src="https://user-images.githubusercontent.com/16898831/146685977-85ab807c-bb04-4378-b005-71c7ecb9566c.png" width="200">
+<img src="https://user-images.githubusercontent.com/16898831/155858967-479b0f9e-3df1-409c-a6b5-29147ca695ac.png" width="320">
 
 # Install
 
@@ -89,6 +88,7 @@ All libraries used are defined in [lib.versions.toml](https://github.com/tfandku
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [Navigation Compose](https://developer.android.com/jetpack/compose/navigation)
+- [Parcelable](https://developer.android.com/kotlin/parcelize)
 
 ## Presentation layer
 
@@ -134,3 +134,9 @@ All libraries used are defined in [lib.versions.toml](https://github.com/tfandku
 # References
 
 - [UnidirectionalViewModel](https://github.com/DroidKaigi/conference-app-2021/blob/main/uicomponent-compose/core/src/main/java/io/github/droidkaigi/feeder/core/UnidirectionalViewModel.kt) from [DroidKaigi/conference-app-2021](https://github.com/DroidKaigi/conference-app-2021)
+
+# Using images
+
+[いらすとや](https://www.irasutoya.com/)
+
+
