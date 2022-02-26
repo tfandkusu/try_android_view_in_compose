@@ -2,6 +2,7 @@ package com.tfandkusu.androidview.compose.home
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -41,6 +42,13 @@ import com.tfandkusu.androidview.viewmodel.home.HomeViewModel
 import com.tfandkusu.androidview.viewmodel.useState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+class HomeScreenItemId(
+    val repoId: Long,
+    val adIndex: Int
+) : Parcelable
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
@@ -90,8 +98,9 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                     }
                 } else {
                     LazyColumn(modifier = Modifier.weight(1f)) {
+                        var adIndex = 0
                         state.repos.mapIndexed { index, repo ->
-                            item(key = repo.id) {
+                            item(key = HomeScreenItemId(repo.id, 0)) {
                                 GitHubRepoListItem(repo) {
                                     navigateToDetail()
                                 }
@@ -101,9 +110,10 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                                     AdType.TYPE_1
                                 else
                                     AdType.TYPE_2
-                                item(key = adType.type) {
+                                item(key = HomeScreenItemId(0, adIndex)) {
                                     InfeedAdAndroidView(adType, recycler)
                                 }
+                                adIndex += 1
                             }
                         }
                     }
