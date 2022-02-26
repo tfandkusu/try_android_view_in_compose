@@ -2,6 +2,7 @@
 <resources>
     <string name="fork">Fork</string>
     <string name="action_information">Information</string>
+    <string name="action_back_to_home">Back to home</string>
     <string name="label_ad">Ad</string>
     <string name="bottom_ad_title">Space Museum</string>
     <string name="bottom_ad_message">Let\'s learn about satellites.</string>
@@ -9,4 +10,6 @@
     <string name="infeed_ad_2_title">Children Aquarium</string>
     <string name="infeed_ad_1_message">Seeing wallabies up close.</string>
     <string name="infeed_ad_2_message">Many penguins welcome you.</string>
+    <string name="title_detail">Detail</string>
+    <string name="no_content">No content.</string>
 </resources>

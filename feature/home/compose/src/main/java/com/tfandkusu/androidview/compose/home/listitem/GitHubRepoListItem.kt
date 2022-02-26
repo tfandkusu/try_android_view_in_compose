@@ -1,8 +1,6 @@
 package com.tfandkusu.androidview.compose.home.listitem
 
-import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,12 +35,12 @@ import androidx.compose.ui.unit.sp
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.home.compose.R
 import com.tfandkusu.androidview.model.GithubRepo
-import com.tfandkusu.androidview.ui.theme.AppTemplateTheme
+import com.tfandkusu.androidview.ui.theme.MyTheme
 import java.util.Date
 import timber.log.Timber
 
 @Composable
-fun GitHubRepoListItem(repo: GithubRepo) {
+fun GitHubRepoListItem(repo: GithubRepo, onClick: () -> Unit = {}) {
     val context = LocalContext.current
     DisposableEffect(Unit) {
         onDispose {
@@ -51,9 +49,7 @@ fun GitHubRepoListItem(repo: GithubRepo) {
     }
     Column(
         modifier = Modifier.clickable {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(repo.htmlUrl)
-            context.startActivity(intent)
+            onClick()
         }
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -174,7 +170,7 @@ fun LanguageLabel(language: String) {
 @Composable
 @Preview(showBackground = true)
 fun GitHubRepoListItemPreviewNormal() {
-    AppTemplateTheme {
+    MyTheme {
         GitHubRepoListItem(
             GitHubRepoCatalog.getList().first()
         )
@@ -184,7 +180,7 @@ fun GitHubRepoListItemPreviewNormal() {
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun GitHubRepoListItemPreviewDark() {
-    AppTemplateTheme {
+    MyTheme {
         GitHubRepoListItem(
             GitHubRepoCatalog.getList().first()
         )
@@ -194,7 +190,7 @@ fun GitHubRepoListItemPreviewDark() {
 @Composable
 @Preview(showBackground = true)
 fun GitHubRepoListItemPreviewLong() {
-    AppTemplateTheme {
+    MyTheme {
         GitHubRepoListItem(
             GithubRepo(
                 1L,
@@ -217,7 +213,7 @@ fun GitHubRepoListItemPreviewLong() {
 @Composable
 @Preview(showBackground = true)
 fun GitHubRepoListItemNoDescription() {
-    AppTemplateTheme {
+    MyTheme {
         GitHubRepoListItem(
             GithubRepo(
                 1L,
