@@ -32,16 +32,16 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("${System.getenv('HOME')}/template.jks")
-            storePassword System.getenv("TEMPLATE_STORE_PASSWORD")
+            storeFile file("${System.getenv('HOME')}/try_android_view.jks")
+            storePassword System.getenv("TAV_STORE_PASSWORD")
             keyAlias "app"
-            keyPassword System.getenv("TEMPLATE_KEY_PASSWORD")
+            keyPassword System.getenv("TAV_KEY_PASSWORD")
         }
     }
     buildTypes {
         release {
-            // shrinkResources true
-            // minifyEnabled true
+//            shrinkResources true
+//            minifyEnabled true
             signingConfig signingConfigs.release
 
             firebaseAppDistribution {
