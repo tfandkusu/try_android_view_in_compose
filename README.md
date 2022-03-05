@@ -14,7 +14,7 @@ Ads (with Ad label) is made by layout XML and others is made by Jetpack Compose.
 
 # Install
 
-TODO
+[<img src="https://dply.me/p0l2mo/button/large" alt="Try it on your device via DeployGate">](https://dply.me/p0l2mo#install)
 
 # Architecture
 
