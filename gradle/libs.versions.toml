@@ -1,27 +1,28 @@
 [versions]
 kotlin = '1.6.10'
-compose = '1.1.0'
+compose = '1.1.1'
 retrofit = '2.9.0'
-room = '2.4.1'
-coroutines = '1.5.2'
+room = '2.4.2'
+coroutines = '1.6.2'
 lifecycle = '2.4.1'
-hilt = '2.40.5'
+hilt = '2.42'
+moshi = '1.13.0'
 
 [libraries]
 # Gradle Plugin
 android-gradle = 'com.android.tools.build:gradle:7.1.1'
 kotlin-gradle = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
-spotless-gradle = 'com.diffplug.spotless:spotless-plugin-gradle:6.2.2'
+spotless-gradle = 'com.diffplug.spotless:spotless-plugin-gradle:6.6.1'
 hilt-gradle = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-firebase-appdistribution = 'com.google.firebase:firebase-appdistribution-gradle:3.0.0'
-deploygate = "com.deploygate:gradle:2.4.0"
-oss-licenses = 'com.google.android.gms:oss-licenses-plugin:0.10.4'
+firebase-appdistribution = 'com.google.firebase:firebase-appdistribution-gradle:3.0.2'
+deploygate = "com.deploygate:gradle:2.5.0"
+oss-licenses = 'com.google.android.gms:oss-licenses-plugin:0.10.5'
 # UI
-core = 'androidx.core:core-ktx:1.7.0'
-appcompat = 'androidx.appcompat:appcompat:1.4.1'
-material = 'com.google.android.material:material:1.5.0'
+core = 'androidx.core:core-ktx:1.8.0'
+appcompat = 'androidx.appcompat:appcompat:1.4.2'
+material = 'com.google.android.material:material:1.6.1'
 compose-ui-ui = { module = 'androidx.compose.ui:ui', version.ref = 'compose' }
 compose-ui-viewbinding = { module = 'androidx.compose.ui:ui-viewbinding', version.ref = 'compose' }
 compose-material = { module = 'androidx.compose.material:material', version.ref = 'compose' }
@@ -35,7 +36,9 @@ play-services-oss-licenses = 'com.google.android.gms:play-services-oss-licenses:
 # Retrofit
 retrofit-retrofit = { module = 'com.squareup.retrofit2:retrofit', version.ref = 'retrofit' }
 retrofit-moshi = { module = 'com.squareup.retrofit2:converter-moshi', version.ref = 'retrofit' }
-moshi-adapter = 'com.squareup.moshi:moshi-adapters:1.8.0'
+moshi = { module = 'com.squareup.moshi:moshi', version.ref = 'moshi' }
+moshi-adapter = { module = 'com.squareup.moshi:moshi-adapters', version.ref = 'moshi' }
+moshi-kotlin-codegen = { module = 'com.squareup.moshi:moshi-kotlin-codegen', version.ref = 'moshi' }
 # Room
 room-runtime = { module = 'androidx.room:room-runtime', version.ref = 'room' }
 room-ktx = { module = 'androidx.room:room-ktx', version.ref = 'room' }
@@ -50,9 +53,9 @@ hilt-compiler = { module = 'com.google.dagger:hilt-compiler', version.ref = 'hil
 hilt-navigation-compose = 'androidx.hilt:hilt-navigation-compose:1.0.0'
 # Unit test
 junit = 'junit:junit:4.13.2'
-mockk = 'io.mockk:mockk:1.12.2'
-kotest = 'io.kotlintest:kotlintest-runner-junit5:3.4.2'
-robolectric = 'org.robolectric:robolectric:4.7.3'
+mockk = 'io.mockk:mockk:1.12.4'
+kotest = 'io.kotest:kotest-runner-junit5:5.3.0'
+robolectric = 'org.robolectric:robolectric:4.8.1'
 test-core = 'androidx.test:core:1.4.0'
 arch-core-testing = 'androidx.arch.core:core-testing:2.1.0'
 # Debug

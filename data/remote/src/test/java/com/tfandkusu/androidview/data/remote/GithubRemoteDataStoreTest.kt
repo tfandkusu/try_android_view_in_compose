@@ -3,10 +3,10 @@ package com.tfandkusu.androidview.data.remote
 import com.tfandkusu.androidview.api.TemplateApiService
 import com.tfandkusu.androidview.api.TemplateApiServiceBuilder
 import com.tfandkusu.androidview.error.NetworkErrorException
-import io.kotlintest.matchers.numerics.shouldBeGreaterThan
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
-import io.kotlintest.shouldThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK

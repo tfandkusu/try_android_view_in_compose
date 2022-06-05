@@ -7,7 +7,7 @@ import com.tfandkusu.androidview.data.local.db.AppDatabaseBuilder
 import com.tfandkusu.androidview.data.local.entity.LocalCreated
 import com.tfandkusu.androidview.util.CurrentTimeGetter
 import com.tfandkusu.androidview.util.parseUTC
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

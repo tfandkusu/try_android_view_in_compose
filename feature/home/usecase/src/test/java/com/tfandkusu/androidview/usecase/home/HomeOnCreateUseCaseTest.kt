@@ -2,7 +2,7 @@ package com.tfandkusu.androidview.usecase.home
 
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.data.repository.GithubRepoRepository
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
