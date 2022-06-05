@@ -7,7 +7,7 @@ import com.tfandkusu.androidview.data.local.entity.LocalCreated
 import com.tfandkusu.androidview.data.remote.GithubRemoteDataStore
 import com.tfandkusu.androidview.model.GithubRepo
 import com.tfandkusu.androidview.util.CurrentTimeGetter
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
