@@ -28,10 +28,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.compose.NyTopAppBar
-import com.tfandkusu.androidview.compose.home.listitem.AdType
 import com.tfandkusu.androidview.compose.home.listitem.GitHubRepoListItem
-import com.tfandkusu.androidview.compose.home.listitem.InfeedAdAndroidView
 import com.tfandkusu.androidview.compose.home.listitem.InfeedAdAndroidViewRecycler
+import com.tfandkusu.androidview.compose.home.listitem.InfeedAdMobAndroidViewSimple
 import com.tfandkusu.androidview.home.compose.R
 import com.tfandkusu.androidview.ui.theme.MyTheme
 import com.tfandkusu.androidview.view.error.ApiError
@@ -109,12 +108,8 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                                 }
                             }
                             if ((index - 2) % 7 == 0) {
-                                val adType = if ((index - 2) % 14 == 0)
-                                    AdType.TYPE_1
-                                else
-                                    AdType.TYPE_2
                                 item(key = HomeScreenItemId(0, adIndex)) {
-                                    InfeedAdAndroidView(adType, recycler)
+                                    InfeedAdMobAndroidViewSimple()
                                 }
                                 adIndex += 1
                             }
