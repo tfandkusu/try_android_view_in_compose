@@ -120,7 +120,7 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                     viewModel.event(HomeEvent.Load)
                 }
             }
-            BottomAdMobAndroidView()
+            // BottomAdMobAndroidView()
         }
     }
 }
