@@ -29,8 +29,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.compose.NyTopAppBar
 import com.tfandkusu.androidview.compose.home.listitem.GitHubRepoListItem
-import com.tfandkusu.androidview.compose.home.listitem.InfeedAdAndroidViewRecycler
-import com.tfandkusu.androidview.compose.home.listitem.InfeedAdMobAndroidViewSimple
+import com.tfandkusu.androidview.compose.home.listitem.InfeedAdMobAndroidViewRecycle
 import com.tfandkusu.androidview.home.compose.R
 import com.tfandkusu.androidview.ui.theme.MyTheme
 import com.tfandkusu.androidview.view.error.ApiError
@@ -55,7 +54,7 @@ class HomeScreenItemId(
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
     val recycler = remember {
-        InfeedAdAndroidViewRecycler()
+        InfeedAndroidViewRecycler()
     }
     LaunchedEffect(Unit) {
         viewModel.event(HomeEvent.OnCreate)
@@ -109,7 +108,7 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                             }
                             if ((index - 2) % 7 == 0) {
                                 item(key = HomeScreenItemId(0, adIndex)) {
-                                    InfeedAdMobAndroidViewSimple()
+                                    InfeedAdMobAndroidViewRecycle(recycler)
                                 }
                                 adIndex += 1
                             }
