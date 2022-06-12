@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.tfandkusu.androidview.usecase.home.HomeLoadUseCase
 import com.tfandkusu.androidview.usecase.home.HomeOnCreateUseCase
 import com.tfandkusu.androidview.viewmodel.error.ApiErrorViewModelHelper
+import com.tfandkusu.androidview.viewmodel.requireValue
 import com.tfandkusu.androidview.viewmodel.update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -36,6 +36,8 @@ class HomeViewModelImpl @Inject constructor(
 
     override val effect: Flow<HomeEffect> = effectChannel.receiveAsFlow()
 
+    private var nativeAdsLoaded = false
+
     override fun event(event: HomeEvent) {
         viewModelScope.launch {
             when (event) {
@@ -55,10 +57,44 @@ class HomeViewModelImpl @Inject constructor(
                     }
                 }
                 HomeEvent.OnCreate -> {
+                    if (!nativeAdsLoaded) {
+                        effectChannel.send(HomeEffect.LoadNativeAds)
+                        nativeAdsLoaded = true
+                    }
                     onCreateUseCase.execute().collect { repos ->
                         _state.update {
                             copy(repos = repos)
                         }
+                    }
+                }
+                is HomeEvent.LoadNativeAd -> {
+                    val index = state.requireValue().nativeAds.indexOfFirst { !it.isEnd() }
+                    if (index >= 0) {
+                        _state.update {
+                            val newNativeAds = nativeAds.mapIndexed { i, _nativeAd ->
+                                if (i == index) {
+                                    _nativeAd.copy(
+                                        nativeAd = event.nativeAd,
+                                        failedToLoad = false
+                                    )
+                                } else {
+                                    _nativeAd
+                                }
+                            }
+                            copy(nativeAds = newNativeAds)
+                        }
+                    }
+                }
+                HomeEvent.EndLoadNativeAd -> {
+                    _state.update {
+                        val newNativeAds = nativeAds.map { nativeAd ->
+                            if (nativeAd.nativeAd == null) {
+                                nativeAd.copy(failedToLoad = true)
+                            } else {
+                                nativeAd
+                            }
+                        }
+                        copy(nativeAds = newNativeAds)
                     }
                 }
             }

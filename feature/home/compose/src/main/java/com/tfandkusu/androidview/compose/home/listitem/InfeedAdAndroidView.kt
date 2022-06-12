@@ -1,4 +1,4 @@
-package com.tfandkusu.androidview.compose.home
+package com.tfandkusu.androidview.compose.home.listitem
 
 import android.view.View
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
+import com.tfandkusu.androidview.compose.home.InfeedAndroidViewRecycler
 import com.tfandkusu.androidview.home.compose.R
 import com.tfandkusu.androidview.home.compose.databinding.ViewInfeedAdBinding
 import timber.log.Timber
@@ -18,7 +19,7 @@ enum class AdType(val type: Int) {
 }
 
 @Composable
-fun InfeedAdAndroidView(adType: AdType, recycler: InfeedAdAndroidViewRecycler) {
+fun InfeedAdAndroidView(adType: AdType, recycler: InfeedAndroidViewRecycler) {
     Column {
         AndroidViewBinding(
             modifier = Modifier.fillMaxWidth().height(100.dp),

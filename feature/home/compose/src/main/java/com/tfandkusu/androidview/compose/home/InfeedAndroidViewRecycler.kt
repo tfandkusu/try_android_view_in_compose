@@ -3,7 +3,7 @@ package com.tfandkusu.androidview.compose.home
 import android.view.View
 import timber.log.Timber
 
-class InfeedAdAndroidViewRecycler {
+class InfeedAndroidViewRecycler {
     private val queue = ArrayDeque(listOf<View>())
 
     fun save(view: View) {

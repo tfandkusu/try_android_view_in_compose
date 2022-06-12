@@ -11,4 +11,5 @@ dependencies {
     implementation project(':common:model')
     implementation project(':viewCommon')
     implementation libs.compose.ui.viewbinding
+    implementation libs.play.services.ads
 }

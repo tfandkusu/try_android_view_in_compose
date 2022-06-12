@@ -26,9 +26,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.compose.NyTopAppBar
 import com.tfandkusu.androidview.compose.home.listitem.GitHubRepoListItem
+import com.tfandkusu.androidview.compose.home.listitem.InfeedAdMobNativeAdvancedAndroidView
 import com.tfandkusu.androidview.home.compose.R
 import com.tfandkusu.androidview.ui.theme.MyTheme
 import com.tfandkusu.androidview.view.error.ApiError
@@ -39,6 +45,7 @@ import com.tfandkusu.androidview.viewmodel.home.HomeEffect
 import com.tfandkusu.androidview.viewmodel.home.HomeEvent
 import com.tfandkusu.androidview.viewmodel.home.HomeState
 import com.tfandkusu.androidview.viewmodel.home.HomeViewModel
+import com.tfandkusu.androidview.viewmodel.requireValue
 import com.tfandkusu.androidview.viewmodel.useState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -52,21 +59,48 @@ class HomeScreenItemId(
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
+    val state = useState(viewModel)
+    val errorState = useErrorState(viewModel.error)
+    val context = LocalContext.current
     val recycler = remember {
-        InfeedAdAndroidViewRecycler()
+        InfeedAndroidViewRecycler()
     }
+    val unitId = stringResource(R.string.ad_mob_native_advanced_unit_id)
     LaunchedEffect(Unit) {
         viewModel.event(HomeEvent.OnCreate)
         viewModel.event(HomeEvent.Load)
+        viewModel.effect.collect {
+            if (it == HomeEffect.LoadNativeAds) {
+                lateinit var adLoader: AdLoader
+                adLoader = AdLoader.Builder(context, unitId)
+                    .forNativeAd { ad ->
+                        viewModel.event(HomeEvent.LoadNativeAd(ad))
+                        if (!adLoader.isLoading) {
+                            viewModel.event(HomeEvent.EndLoadNativeAd)
+                        }
+                    }.withAdListener(object : AdListener() {
+                        override fun onAdFailedToLoad(error: LoadAdError) {
+                            viewModel.event(HomeEvent.EndLoadNativeAd)
+                        }
+                    }).withNativeAdOptions(
+                        NativeAdOptions.Builder()
+                            .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
+                            .setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_SQUARE)
+                            .build()
+                    )
+                    .build()
+                adLoader.loadAds(AdRequest.Builder().build(), state.nativeAds.size)
+            }
+        }
     }
     DisposableEffect(Unit) {
         onDispose {
             recycler.clear()
+            viewModel.state.requireValue().nativeAds.map {
+                it.nativeAd?.destroy()
+            }
         }
     }
-    val context = LocalContext.current
-    val state = useState(viewModel)
-    val errorState = useErrorState(viewModel.error)
     Scaffold(
         topBar = {
             NyTopAppBar(
@@ -91,14 +125,15 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
             if (errorState.noError()) {
                 if (state.progress) {
                     Box(
-                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
                     }
                 } else {
                     LazyColumn(modifier = Modifier.weight(1f)) {
-                        var adIndex = 0
                         state.repos.mapIndexed { index, repo ->
                             item(key = HomeScreenItemId(repo.id, 0)) {
                                 GitHubRepoListItem(repo) {
@@ -106,14 +141,13 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                                 }
                             }
                             if ((index - 2) % 7 == 0) {
-                                val adType = if ((index - 2) % 14 == 0)
-                                    AdType.TYPE_1
-                                else
-                                    AdType.TYPE_2
-                                item(key = HomeScreenItemId(0, adIndex)) {
-                                    InfeedAdAndroidView(adType, recycler)
+                                item(key = HomeScreenItemId(0, index)) {
+                                    val adIndex = (index - 2) / 7
+                                    val nativeAd = state.nativeAds[adIndex % state.nativeAds.size]
+                                    InfeedAdMobNativeAdvancedAndroidView(
+                                        nativeAd.nativeAd
+                                    )
                                 }
-                                adIndex += 1
                             }
                         }
                     }
@@ -123,7 +157,7 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                     viewModel.event(HomeEvent.Load)
                 }
             }
-            BottomAdAndroidView()
+            // BottomAdMobAndroidView()
         }
     }
 }

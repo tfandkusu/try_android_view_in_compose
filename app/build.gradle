@@ -53,6 +53,9 @@ android {
             }
         }
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -63,4 +66,5 @@ dependencies {
     implementation project(':feature:info:view')
     implementation libs.navigation.compose
     implementation libs.hilt.navigation.compose
+    implementation libs.play.services.ads
 }
