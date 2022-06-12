@@ -26,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.compose.NyTopAppBar
 import com.tfandkusu.androidview.compose.home.listitem.GitHubRepoListItem
@@ -44,6 +46,7 @@ import com.tfandkusu.androidview.viewmodel.useState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
+import timber.log.Timber
 
 @Parcelize
 class HomeScreenItemId(
@@ -53,19 +56,31 @@ class HomeScreenItemId(
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
+    val context = LocalContext.current
     val recycler = remember {
         InfeedAndroidViewRecycler()
     }
+    val unitId = stringResource(R.string.ad_mob_native_advanced_unit_id)
     LaunchedEffect(Unit) {
         viewModel.event(HomeEvent.OnCreate)
         viewModel.event(HomeEvent.Load)
+        viewModel.effect.collect {
+            if (it == HomeEffect.LoadNativeAds) {
+                var adLoader: AdLoader? = null
+                adLoader = AdLoader.Builder(context, unitId)
+                    .forNativeAd { ad ->
+                        Timber.d("ad = $ad")
+                        Timber.d("adLoader.isLoading = " + adLoader?.isLoading)
+                    }.build()
+                adLoader.loadAds(AdRequest.Builder().build(), 3)
+            }
+        }
     }
     DisposableEffect(Unit) {
         onDispose {
             recycler.clear()
         }
     }
-    val context = LocalContext.current
     val state = useState(viewModel)
     val errorState = useErrorState(viewModel.error)
     Scaffold(
@@ -92,7 +107,9 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
             if (errorState.noError()) {
                 if (state.progress) {
                     Box(
-                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()

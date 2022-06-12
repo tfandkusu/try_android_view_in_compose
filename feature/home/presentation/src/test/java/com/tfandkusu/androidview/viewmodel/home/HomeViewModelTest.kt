@@ -7,6 +7,7 @@ import com.tfandkusu.androidview.usecase.home.HomeLoadUseCase
 import com.tfandkusu.androidview.usecase.home.HomeOnCreateUseCase
 import com.tfandkusu.androidview.viewmodel.error.ApiErrorState
 import com.tfandkusu.androidview.viewmodel.mockStateObserver
+import io.kotest.matchers.shouldBe
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
@@ -15,6 +16,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.verifySequence
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -67,6 +69,7 @@ class HomeViewModelTest {
         }
         val mockStateObserver = viewModel.state.mockStateObserver()
         viewModel.event(HomeEvent.OnCreate)
+        viewModel.effect.first() shouldBe HomeEffect.LoadNativeAds
         verifySequence {
             mockStateObserver.onChanged(HomeState())
             onCreateUseCase.execute()
@@ -109,4 +112,21 @@ class HomeViewModelTest {
             stateMockObserver.onChanged(HomeState(progress = false))
         }
     }
+
+//    @ExperimentalCoroutinesApi
+//    @Test
+//    fun loadNativeAdSuccess() = runTest {
+//        val stateMockObserver = viewModel.state.mockStateObserver()
+//        val ad1 = mockk<NativeAd>()
+//        viewModel.event(HomeEvent.LoadNativeAd(ad1))
+//        verifySequence {
+//            stateMockObserver.onChanged(
+//                HomeState(
+//                    nativeAds = listOf(
+//                        HomeNativeAd(1, ad1), HomeNativeAd(2), HomeNativeAd(3)
+//                    )
+//                )
+//            )
+//        }
+//    }
 }

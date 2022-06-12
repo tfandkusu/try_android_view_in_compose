@@ -14,4 +14,5 @@
     <string name="no_content">No content.</string>
     <!-- AdMob (For test)-->
     <string name="ad_mob_banner_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_mob_native_advanced_unit_id">ca-app-pub-3940256099942544/2247696110</string>
 </resources>
