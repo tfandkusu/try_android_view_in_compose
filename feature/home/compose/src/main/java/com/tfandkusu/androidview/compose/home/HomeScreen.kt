@@ -26,12 +26,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.tfandkusu.androidview.catalog.GitHubRepoCatalog
 import com.tfandkusu.androidview.compose.NyTopAppBar
 import com.tfandkusu.androidview.compose.home.listitem.GitHubRepoListItem
-import com.tfandkusu.androidview.compose.home.listitem.InfeedAdMobAndroidViewRecycle
+import com.tfandkusu.androidview.compose.home.listitem.InfeedAdMobNativeAdvancedAndroidView
 import com.tfandkusu.androidview.home.compose.R
 import com.tfandkusu.androidview.ui.theme.MyTheme
 import com.tfandkusu.androidview.view.error.ApiError
@@ -42,11 +45,11 @@ import com.tfandkusu.androidview.viewmodel.home.HomeEffect
 import com.tfandkusu.androidview.viewmodel.home.HomeEvent
 import com.tfandkusu.androidview.viewmodel.home.HomeState
 import com.tfandkusu.androidview.viewmodel.home.HomeViewModel
+import com.tfandkusu.androidview.viewmodel.requireValue
 import com.tfandkusu.androidview.viewmodel.useState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
-import timber.log.Timber
 
 @Parcelize
 class HomeScreenItemId(
@@ -56,6 +59,8 @@ class HomeScreenItemId(
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
+    val state = useState(viewModel)
+    val errorState = useErrorState(viewModel.error)
     val context = LocalContext.current
     val recycler = remember {
         InfeedAndroidViewRecycler()
@@ -66,23 +71,36 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
         viewModel.event(HomeEvent.Load)
         viewModel.effect.collect {
             if (it == HomeEffect.LoadNativeAds) {
-                var adLoader: AdLoader? = null
+                lateinit var adLoader: AdLoader
                 adLoader = AdLoader.Builder(context, unitId)
                     .forNativeAd { ad ->
-                        Timber.d("ad = $ad")
-                        Timber.d("adLoader.isLoading = " + adLoader?.isLoading)
-                    }.build()
-                adLoader.loadAds(AdRequest.Builder().build(), 3)
+                        viewModel.event(HomeEvent.LoadNativeAd(ad))
+                        if (!adLoader.isLoading) {
+                            viewModel.event(HomeEvent.EndLoadNativeAd)
+                        }
+                    }.withAdListener(object : AdListener() {
+                        override fun onAdFailedToLoad(error: LoadAdError) {
+                            viewModel.event(HomeEvent.EndLoadNativeAd)
+                        }
+                    }).withNativeAdOptions(
+                        NativeAdOptions.Builder()
+                            .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
+                            .setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_SQUARE)
+                            .build()
+                    )
+                    .build()
+                adLoader.loadAds(AdRequest.Builder().build(), state.nativeAds.size)
             }
         }
     }
     DisposableEffect(Unit) {
         onDispose {
             recycler.clear()
+            viewModel.state.requireValue().nativeAds.map {
+                it.nativeAd?.destroy()
+            }
         }
     }
-    val state = useState(viewModel)
-    val errorState = useErrorState(viewModel.error)
     Scaffold(
         topBar = {
             NyTopAppBar(
@@ -116,7 +134,6 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                     }
                 } else {
                     LazyColumn(modifier = Modifier.weight(1f)) {
-                        var adIndex = 0
                         state.repos.mapIndexed { index, repo ->
                             item(key = HomeScreenItemId(repo.id, 0)) {
                                 GitHubRepoListItem(repo) {
@@ -124,10 +141,13 @@ fun HomeScreen(viewModel: HomeViewModel, navigateToDetail: () -> Unit = {}) {
                                 }
                             }
                             if ((index - 2) % 7 == 0) {
-                                item(key = HomeScreenItemId(0, adIndex)) {
-                                    InfeedAdMobAndroidViewRecycle(recycler)
+                                item(key = HomeScreenItemId(0, index)) {
+                                    val adIndex = (index - 2) / 7
+                                    val nativeAd = state.nativeAds[adIndex % state.nativeAds.size]
+                                    InfeedAdMobNativeAdvancedAndroidView(
+                                        nativeAd.nativeAd
+                                    )
                                 }
-                                adIndex += 1
                             }
                         }
                     }
