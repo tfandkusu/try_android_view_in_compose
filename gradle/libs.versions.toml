@@ -21,7 +21,7 @@ deploygate = "com.deploygate:gradle:2.5.0"
 oss-licenses = 'com.google.android.gms:oss-licenses-plugin:0.10.5'
 # UI
 core = 'androidx.core:core-ktx:1.8.0'
-appcompat = 'androidx.appcompat:appcompat:1.4.2'
+appcompat = 'androidx.appcompat:appcompat:1.6.1'
 material = 'com.google.android.material:material:1.6.1'
 compose-ui-ui = { module = 'androidx.compose.ui:ui', version.ref = 'compose' }
 compose-ui-viewbinding = { module = 'androidx.compose.ui:ui-viewbinding', version.ref = 'compose' }
